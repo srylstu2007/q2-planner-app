@@ -69,5 +69,7 @@ if (cached) show(cached);
 if (!token()) { if (!cached) askToken() }
 else check().then(() => { if (!frame) $('msg').textContent = 'Couldn’t load. Check your internet and reopen.' });
 setInterval(check, 30 * 60 * 1000);
+// the app's ↻ button asks the shell to look for a new app version right away
+window.addEventListener('message', e => { if (e.source === (frame && frame.contentWindow) && e.data && e.data.q2 === 'check-ui') check() });
 </script>
 </body></html>
