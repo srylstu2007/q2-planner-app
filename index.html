@@ -68,7 +68,11 @@ const cached = get('q2-ui');
 if (cached) show(cached);
 if (!token()) { if (!cached) askToken() }
 else check().then(() => { if (!frame) $('msg').textContent = 'Couldn’t load. Check your internet and reopen.' });
-setInterval(check, 30 * 60 * 1000);
+setInterval(check, 5 * 60 * 1000);
+// also look for a new app version whenever you come back to the window (at most once a minute)
+let lastFocus = Date.now();
+const onBack = () => { if (document.visibilityState === 'visible' && Date.now() - lastFocus > 60000) { lastFocus = Date.now(); check() } };
+window.addEventListener('focus', onBack); document.addEventListener('visibilitychange', onBack);
 // the app's ↻ button asks the shell to look for a new app version right away
 window.addEventListener('message', e => { if (e.source === (frame && frame.contentWindow) && e.data && e.data.q2 === 'check-ui') check() });
 </script>
